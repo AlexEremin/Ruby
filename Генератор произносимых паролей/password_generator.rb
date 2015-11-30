@@ -1,15 +1,60 @@
 # Практическое задание 0
 # Простой генератор произносимых паролей
 
-#Пока еще не очень произносимых
+#Аргументы: >длина пароля >разные регистры >число в конце
 
-SIZE = 5
-
-alphabet = ('a'..'z').to_a | ('A'..'Z').to_a
-
-password = []
-SIZE.times do
-  password << alphabet[rand(alphabet.size)]
+def to_boolean(str)
+  !(str == "false" or str == "0")
 end
 
-print password
+if  0 < ARGV.size and ARGV.size < 3
+  puts "Некорректное число аргументов в командной строке(должно  быть 0 или 3)"
+  exit 1
+end 
+
+args = {size: 6, registr: true, numInEnd: true}
+if ARGV.size == 3
+  args[:size] = ARGV[0].to_i
+  args[:registr] = to_boolean(ARGV[1])
+  args[:numInEnd] = to_boolean(ARGV[2])
+end
+#puts args
+
+ALPHABET = ('a'..'z').to_a
+VOWELS = ['a', 'e', 'i', 'o', 'u'] #Гласные бувы
+CONSONANTS = ALPHABET - VOWELS #Согласные буквы
+
+listOfPasswords = []
+
+13.times do
+  password = ""
+  
+  vowel = [true, false].sample #Первая буква - гласная?
+  args[:size].times do
+    if !vowel then password << VOWELS.sample end
+    if vowel then password << CONSONANTS.sample end
+    vowel = !vowel
+  end
+  
+  if args[:registr]
+    password.each_char do |i|
+      toUp = [true, false].sample
+      if toUp then password[i] = password[i].upcase end
+    end
+  end
+  
+  if args[:numInEnd]
+    num = rand(1..4)
+    num.times do
+      password << rand(0..9).to_s
+    end
+  end
+  listOfPasswords << password
+end
+
+puts listOfPasswords
+
+
+
+
+
