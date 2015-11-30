@@ -24,7 +24,7 @@ ALPHABET = ('a'..'z').to_a
 VOWELS = ['a', 'e', 'i', 'o', 'u'] # Гласные бувы.
 CONSONANTS = ALPHABET - VOWELS # Согласные буквы.
 
-listOfPasswords = []
+list_of_passwords = []
 
 13.times do
   password = ""
@@ -47,11 +47,11 @@ listOfPasswords = []
     num = rand(1..4)
     num.times do password << rand(0..9).to_s end
   end
-  listOfPasswords << password
+  list_of_passwords << password
 end
 
 puts "Список паролей:"
-puts listOfPasswords
+puts list_of_passwords
 
 
 
