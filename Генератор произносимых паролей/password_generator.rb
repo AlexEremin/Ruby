@@ -1,7 +1,7 @@
-# Практическое задание 0
-# Простой генератор произносимых паролей
+# Practical task 0
+# Pronounceable password generator.
 
-# Аргументы: >длина пароля >разные регистры >число в конце
+# Arguments: >size of password  >use different registr? >use numbers?
 
 def to_boolean(str)
   !(str == 'false' || str == '0')
@@ -19,28 +19,28 @@ if ARGV.size == 3
   args[:num] = to_boolean(ARGV[2])
 end
 
-# Генератор паролей.
+# Generator
 class PassworsGenerator
+  ALPHABET = ('a'..'z').to_a
+  VOWELS = %w(a e i o u)
+  CONSONANTS = ALPHABET - VOWELS
+
   def initialize(args)
     @password_size = args[:size]
     @password_registr = args[:registr]
     @password_num = args[:num]
-    
-    @ALPHABET = ('a'..'z').to_a
-    @VOWELS = ['a', 'e', 'i', 'o', 'u'] # Гласные бувы
-    @CONSONANTS = @ALPHABET - @VOWELS # Согласные буквы
-    
   end
-  
+
   def get_password
     password = ''
-      
-    vowel = [true, false].sample #Первая буква - гласная?
-   @password_size.times do
-      if vowel then password << @VOWELS.sample end
-      unless  vowel then password << @CONSONANTS.sample end
+
+    vowel = [true, false].sample
+    @password_size.times do
+      if vowel then password << VOWELS.sample end
+      unless  vowel then password << CONSONANTS.sample end
       vowel = !vowel
     end
+    
     if @password_registr
       password.each_char do |i|
         to_up = [true, false].sample
