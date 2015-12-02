@@ -1,59 +1,70 @@
 # Практическое задание 0
-# Простой генератор произносимых паролей.
+# Простой генератор произносимых паролей
 
-# Аргументы: >длина пароля(его буквенной части) >разные регистры
-#   >число в конце(максимум из 4 цифр, так легче запомнить).
+# Аргументы: >длина пароля >разные регистры >число в конце
 
 def to_boolean(str)
-  !(str == "false" || str == "0")
+  !(str == 'false' || str == '0')
 end
 
-if  0 < ARGV.size && ARGV.size < 3
-  puts "Некорректное число аргументов в командной строке(должно  быть 0 или 3)"
+if 0 < ARGV.size && ARGV.size < 3
+  puts 'Некорректное число аргументов в командной строке(должно  быть 0 или 3)'
   exit 1
-end 
+end
 
-args = {size: 6, registr: true, numInEnd: true}
+args = { size: 6, registr: true, num: true }
 if ARGV.size == 3
   args[:size] = ARGV[0].to_i
   args[:registr] = to_boolean(ARGV[1])
-  args[:numInEnd] = to_boolean(ARGV[2])
+  args[:num] = to_boolean(ARGV[2])
 end
 
-ALPHABET = ('a'..'z').to_a
-VOWELS = ['a', 'e', 'i', 'o', 'u'] # Гласные бувы.
-CONSONANTS = ALPHABET - VOWELS # Согласные буквы.
-
-list_of_passwords = []
-
-13.times do
-  password = ""
-  
-  vowel = [true, false].sample # Первая буква - гласная?
-  args[:size].times do
-    if !vowel then password << VOWELS.sample end
-    if vowel then password << CONSONANTS.sample end
-    vowel = !vowel
+# Генератор паролей.
+class PassworsGenerator
+  def initialize(args)
+    @password_size = args[:size]
+    @password_registr = args[:registr]
+    @password_num = args[:num]
+    
+    @ALPHABET = ('a'..'z').to_a
+    @VOWELS = ['a', 'e', 'i', 'o', 'u'] # Гласные бувы
+    @CONSONANTS = @ALPHABET - @VOWELS # Согласные буквы
+    
   end
   
-  if args[:registr]
-    password.each_char do |i|
-      toUp = [true, false].sample
-      if toUp then password[i] = password[i].upcase end
+  def get_password
+    password = ''
+      
+    vowel = [true, false].sample #Первая буква - гласная?
+   @password_size.times do
+      if vowel then password << @VOWELS.sample end
+      unless  vowel then password << @CONSONANTS.sample end
+      vowel = !vowel
     end
+    if @password_registr
+      password.each_char do |i|
+        to_up = [true, false].sample
+        if to_up then password[i] = password[i].upcase end
+      end
+    end
+
+    if @password_num
+      num = rand(1..4)
+      num.times do
+        password << rand(0..9).to_s
+      end
+    end
+    password
   end
-  
-  if args[:numInEnd]
-    num = rand(1..4)
-    num.times do password << rand(0..9).to_s end
+
+  def get_password_list(list_size = 10)
+    password_list = []
+    list_size.times do
+      password_list << get_password
+    end
+    password_list
   end
-  list_of_passwords << password
 end
 
-puts "Список паролей:"
-puts list_of_passwords
-
-
-
-
-
+G = PassworsGenerator.new(args)
+puts G.get_password_list
